@@ -6,6 +6,8 @@
 from os import startfile
 import matplotlib.pyplot as plt
 import matplotlib
+from collections import deque
+import heapq
 
 # creates a maze object from an array that contains the state of the maze at a given row, col from a file
 # states are: 0 -> open space, 1 -> barrier, 2-> failed path, 3 -> successfull path
@@ -43,9 +45,29 @@ class maze:
         plt.imshow(self.board, vmin = 0, vmax = 3, cmap=cm)
         plt.show()
 
-#algorithm zero
+# Check to see whether a given cordinate is valid given the size of the maze
+def isValid(row, col, size):
+    return (row >= 0) and (col >= 0) and (row < size) and (col < size)
+
+# algorithm zero: Uniform Cost Search to find shortest path from start to goal
 def algoZero(board, start, goal):
-    print("algo zero")
+    #check to see if start and end points are on the board
+    if not isValid(start[0], start[1], len(board)) or not isValid(goal[0], goal[1], len(board)):
+        return -1
+
+    # check to see if start and end point are valid (not a barrier), if they are at barrier (1) return -1
+    if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
+        return -1
+    
+    # initialize a visited array set to false, when a cell is visited mark it as true
+    visited = [[False for i in range(len(board[0]))] for j in range(len(board))]
+
+    visited[start[0]][start[1]] = True
+
+    # create a priority queue using python deque class for BFS
+    minQueue = heapq()
+    
+
 
 #algorithm one
 def algoOne(board, start, goal):

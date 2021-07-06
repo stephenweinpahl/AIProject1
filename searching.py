@@ -158,17 +158,17 @@ def algoZero(maze):
         # only check cells that are not visited
         if visited[x][y] == False:
             frontier = getNeighbors(x, y, board, cost)
-            if frontier:
-                for cell in frontier:
-                    # check if the current distance is larger than the recently calculated distance from the parent cell to the child cell, if not there is a faster route
-                    i = cell[1]
-                    j = cell[2]
-                    childCost = cell[0]
-                    if distTo[i][j] > childCost:
-                        heapq.heappush(minQueue, cell)
-                        distTo[i][j] = cell[0]
-                        # add the new cell parent into the parent list
-                        parent[i][j] = [x, y]
+            for cell in frontier:
+                # check if the current distance is larger than the recently calculated distance from the parent cell to the child cell, if not there is a faster route
+                i = cell[1]
+                j = cell[2]
+                childCost = cell[0]
+                if distTo[i][j] > childCost:
+                    # push child onto the min heap and set distance to cost
+                    heapq.heappush(minQueue, cell)
+                    distTo[i][j] = cell[0]
+                    # add the new cell parent into the parent list
+                    parent[i][j] = [x, y]
                         
         visited[x][y] = True
     return -1

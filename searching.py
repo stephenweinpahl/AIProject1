@@ -127,7 +127,7 @@ def algoZero(maze):
 
     # check to see if start and end point are valid (not a barrier), if they are at barrier (1) return -1
     if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
-        return -1
+        return -2
 
     # initialize a visited array set to false, when a cell is visited mark it as true and 
     # distTo array to determine minimum cost of getting to a point intitialized to max int value 
@@ -171,7 +171,7 @@ def algoZero(maze):
                     parent[i][j] = [x, y]
                         
         visited[x][y] = True
-    return -1
+    return -3
 
 # Depth - Limited Search
 # curr is current cell being searched   
@@ -230,9 +230,9 @@ def algoOne(maze):
     
     # check to see if start and end point are valid (not a barrier), if they are at barrier (1) return -1
     if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
-        return -1
+        return -2
    
-    for depth in range(1000):
+    for depth in range(200):
         # initialize a visited array set to false, when a cell is visited mark it as true and 
         # parent array to reconstruct the path if it exists
         visited = [[False for i in range(len(board[0]))] for j in range(len(board))]
@@ -243,10 +243,9 @@ def algoOne(maze):
         if found:
             return findPath(maze, parent, start, goal)
         elif not remaining:
-            return -1
-    return -1
+            return -3
+    return -3
             
-
 # A* with Manhattan Distance (h1)
 def algoTwo(maze):
     start = maze.start
@@ -259,7 +258,7 @@ def algoTwo(maze):
 
     # check to see if start and end point are valid (not a barrier), if they are at barrier (1) return -1
     if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
-        return -1
+        return -2
 
     # initialize a visited array set to false, when a cell is visited mark it as true and 
     # gScore array to determine the current minimum known cost of getting to a point from startintitialized to max int value (g(n))
@@ -308,7 +307,7 @@ def algoTwo(maze):
                         parent[i][j] = [x, y]
                         
         visited[x][y] = True
-    return -1
+    return -3
 
 # A* with Minimum of Euclidian and Manhattan (h3)
 def algoThree(maze):
@@ -322,7 +321,7 @@ def algoThree(maze):
 
     # check to see if start and end point are valid (not a barrier), if they are at barrier (1) return -1
     if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
-        return -1
+        return -2
 
     # initialize a visited array set to false, when a cell is visited mark it as true and 
     # gScore array to determine the current minimum known cost of getting to a point from startintitialized to max int value (g(n))
@@ -371,7 +370,7 @@ def algoThree(maze):
                         parent[i][j] = [x, y]
                         
         visited[x][y] = True
-    return -1
+    return -3
 
 # A* with custom heuristic to determine minimum of random scaled Euclidian and Manahattan Distance
 def algoFour(maze):
@@ -385,7 +384,7 @@ def algoFour(maze):
 
     # check to see if start and end point are valid (not a barrier), if they are at barrier (1) return -1
     if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
-        return -1
+        return -2
 
     # initialize a visited array set to false, when a cell is visited mark it as true and 
     # gScore array to determine the current minimum known cost of getting to a point from startintitialized to max int value (g(n))
@@ -434,12 +433,10 @@ def algoFour(maze):
                         parent[i][j] = [x, y]
                         
         visited[x][y] = True
-    return -1
+    return -3
 
-# opens the problem.txt file and populates the neccessary information to create the maze object
-# algo is the number of alrogithm that should be used to solve the maze
-def main():
-    file = "problem.txt"
+# Executes the given path finding algoithm on a maze described in the problem file
+def runProblem(file):
     f = open(file, "r")
     lines = f.readlines()
     size = int(lines[0])
@@ -453,32 +450,144 @@ def main():
     file = "maze_" + str(lines[4].strip()) + ".txt"
     maze1 = maze(file, start, goal, size)
     name = ["Uniform Cost Search Algorithm", "Iterative Deepining Depth First Search", "A* with Manhattan Distance (h1)", "A* with Minimum of Euclidian and Manhattan Distance (h3)", "A* with Custom Heuristic"]
-    results = []
-    for algo in range(5):
-        maze1.buildMaze()
-        tic = time.perf_counter()
-        if algo == 0:
-            result = algoZero(maze1)
-        elif algo == 1:
-            result = algoOne(maze1)
-        elif algo == 2:
-            result = algoTwo(maze1)
-        elif algo == 3:
-            result = algoThree(maze1)
-        elif algo == 4:
-            result = algoFour(maze1)
-        else:
-            result = -1
-        toc = time.perf_counter()
-        performance = toc - tic
-        if result == -1:
-            print("Error")
-        else:
-            print("The shortest path for maze_" + str(lines[4].strip()) + " using the " + name[algo] + " is " + str(result))
-            print("It took " + str(performance) + " seconds to calculate the path")
-        results.append((result, performance, algo))
+    maze1.buildMaze()
+    tic = time.perf_counter()
+    if algo == 0:
+        result = algoZero(maze1)
+    elif algo == 1:
+        result = algoOne(maze1)
+    elif algo == 2:
+        result = algoTwo(maze1)
+    elif algo == 3:
+        result = algoThree(maze1)
+    elif algo == 4:
+        result = algoFour(maze1)
+    else:
+        result = -1
+    toc = time.perf_counter()
+    performance = toc - tic
+    if result == -1:
+        print("Error")
+    else:
+        print("The shortest path for maze_" + str(lines[4].strip()) + " using the " + name[algo] + " is " + str(result))
+        print("It took " + str(performance) + " seconds to calculate the path")
     maze1.visualize()
-    print(results)
+
+# Create a random valid starting point and end point given a maze
+def createIC(maze):
+    board = maze.board
+    x = int(random.random()*101)
+    y = int(random.random()*101)
+
+    while(board[x][y] != 0):
+        x = int(random.random()*101)
+        y = int(random.random()*101)
+
+    startX = x
+    startY = y
+    maze.start = [startX, startY]
+    
+    x = int(random.random()*101)
+    y = int(random.random()*101)
+
+    while board[x][y] != 0 or x == startX or y == startY:
+        x = int(random.random()*101)
+        y = int(random.random()*101)
+        
+    maze.goal = [x, y]
+    
+# Evaluates all algorithms for speed and cost for a given maze. The start and goal points are randomly selected for each maze to ensure they are valid
+def evaluate():
+    name = ["Uniform Cost Search Algorithm", "Iterative Deepining Depth First Search", "A* with Manhattan Distance (h1)", "A* with Minimum of Euclidian and Manhattan Distance (h3)", "A* with Custom Heuristic"]
+    results = []
+    count = []
+    for i in range(5):
+        count.append(i)
+        if i < 10:
+            num = "00" + str(i)
+        elif i < 100:
+            num = "0" + str(i)
+        else:
+            num = str(i)
+        size = 101
+        file = "maze_" + num + ".txt"
+        maze1 = maze(file, 0, 0, size)
+        maze1.buildMaze()
+        createIC(maze1)
+        run = []
+        for algo in range(5):
+            maze1.buildMaze()
+            tic = time.perf_counter()
+            if algo == 0:
+                result = algoZero(maze1)
+            elif algo == 1:
+                result = algoOne(maze1)
+            elif algo == 2:
+                result = algoTwo(maze1)
+            elif algo == 3:
+                result = algoThree(maze1)
+            elif algo == 4:
+                result = algoFour(maze1)
+            else:
+                result = -1
+            toc = time.perf_counter()
+            performance = toc - tic
+            if result == -1:
+                print("Error: Starting or End point out of bounds")
+            elif result == -2:
+                print("Error: Starting or End point at boundary")
+                print(maze1.start, maze1.goal, maze1.board[maze1.start[0]][maze1.start[1]], maze1.board[maze1.goal[0]][maze1.start[1]])
+            elif result == -3:
+                print("Error: No path found")
+            else:
+                print("The shortest path for maze_" + num + " using the " + name[algo] + " is " + str(result))
+                print("It took " + str(performance) + " seconds to calculate the path")
+
+            if result < 0:
+                result = 0
+            run.append((result, performance, algo))
+        results.append(run)
+
+    algo0Cost = []
+    algo1Cost = []
+    algo2Cost = []
+    algo3Cost = []
+    algo4Cost = []
+    algo0Perf = []
+    algo1Perf = []
+    algo2Perf = []
+    algo3Perf = []
+    algo4Perf = []
+    for result in results:
+        for data in result:
+            if data[2] == 0:
+                algo0Cost.append(data[0])
+                algo0Perf.append(data[1])
+            elif data[2] == 1:
+                algo1Cost.append(data[0])
+                algo1Perf.append(data[1])
+            elif data[2] == 2:
+                algo2Cost.append(data[0])
+                algo2Perf.append(data[1])
+            elif data[2] == 3:
+                algo3Cost.append(data[0])
+                algo3Perf.append(data[1])
+            elif data[2] == 4:
+                algo4Cost.append(data[0])
+                algo4Perf.append(data[1])
+    plt.figure()
+    plt.subplot(211)
+    plt.title("Cost vs Algorithm")
+    plt.legend(["0", "1", "2", "3", "4"])
+    plt.plot(count,algo0Cost, count,algo1Cost, count,algo2Cost, count,algo3Cost, count,algo4Cost)
+
+    plt.subplot(212)
+    plt.title("Performance vs Algorithm")
+    plt.plot(count,algo0Perf, count,algo1Perf, count,algo2Perf, count,algo3Perf, count,algo4Perf)
+    plt.show()
+def main():
+    evaluate()
+    
 if __name__ == "__main__":
     main()
 

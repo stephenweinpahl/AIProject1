@@ -232,7 +232,7 @@ def algoOne(maze):
     if board[start[0]][start[1]] != 0 or board[goal[0]][goal[1]] != 0:
         return -2
    
-    for depth in range(200):
+    for depth in range(800):
         # initialize a visited array set to false, when a cell is visited mark it as true and 
         # parent array to reconstruct the path if it exists
         visited = [[False for i in range(len(board[0]))] for j in range(len(board))]
@@ -586,7 +586,8 @@ def evaluate():
     plt.plot(count,algo0Perf, count,algo1Perf, count,algo2Perf, count,algo3Perf, count,algo4Perf)
     plt.show()
 def main():
-    evaluate()
+    #evaluate()
+    runProblem("problem.txt")
     
 if __name__ == "__main__":
     main()

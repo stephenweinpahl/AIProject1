@@ -497,11 +497,11 @@ def createIC(maze):
     maze.goal = [x, y]
     
 # Evaluates all algorithms for speed and cost for a given maze. The start and goal points are randomly selected for each maze to ensure they are valid
-def evaluate():
+def evaluate(num):
     name = ["Uniform Cost Search Algorithm", "Iterative Deepining Depth First Search", "A* with Manhattan Distance (h1)", "A* with Minimum of Euclidian and Manhattan Distance (h3)", "A* with Custom Heuristic"]
     results = []
     count = []
-    for i in range(5):
+    for i in range(num):
         count.append(i)
         if i < 10:
             num = "00" + str(i)
@@ -581,13 +581,19 @@ def evaluate():
     plt.legend(["0", "1", "2", "3", "4"])
     plt.plot(count,algo0Cost, count,algo1Cost, count,algo2Cost, count,algo3Cost, count,algo4Cost)
 
+    #plt.subplot(212)
+    #plt.title("Performance vs Algorithm")
+    #plt.plot(count,algo0Perf, count,algo1Perf, count,algo2Perf, count,algo3Perf, count,algo4Perf)
+
     plt.subplot(212)
-    plt.title("Performance vs Algorithm")
-    plt.plot(count,algo0Perf, count,algo1Perf, count,algo2Perf, count,algo3Perf, count,algo4Perf)
+    plt.title("Cost vs Performance")
+    plt.plot(algo0Cost,algo0Perf, algo1Cost,algo1Perf, algo2Cost,algo2Perf, algo3Cost,algo3Perf, algo4Cost,algo4Perf)
+
     plt.show()
+    
 def main():
-    #evaluate()
-    runProblem("problem.txt")
+    evaluate(10)
+    #runProblem("problem.txt")
     
 if __name__ == "__main__":
     main()

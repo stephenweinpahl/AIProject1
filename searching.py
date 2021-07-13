@@ -5,11 +5,12 @@
 import random
 import math
 import time
-from os import startfile
+#from os import startfile
 import matplotlib.pyplot as plt
 import matplotlib
 from collections import deque
 import heapq
+import numpy as np
 
 # creates a maze object from an array that contains the state of the maze at a given row, col from a file
 # states are: 0 -> open space, 1 -> barrier, 2-> failed path, 3 -> successfull path, 4 -> start point, 5 -> end point
@@ -593,26 +594,44 @@ def evaluate(num):
                 algo4Cost.append(data[0])
                 algo4Perf.append(data[1])
     plt.figure()
-    plt.subplot(211)
-    plt.title("Cost vs Algorithm")
-    plt.legend(["0", "1", "2", "3", "4"])
-    plt.plot(count,algo0Cost, count,algo1Cost, count,algo2Cost, count,algo3Cost, count,algo4Cost)
-
-    #plt.subplot(212)
-    #plt.title("Performance vs Algorithm")
-    #plt.plot(count,algo0Perf, count,algo1Perf, count,algo2Perf, count,algo3Perf, count,algo4Perf)
-
-    plt.subplot(212)
-    plt.title("Cost vs Performance")
-    plt.plot(algo0Cost,algo0Perf, algo1Cost,algo1Perf, algo2Cost,algo2Perf, algo3Cost,algo3Perf, algo4Cost,algo4Perf)
-
+    #Cost vs performance
+    plt.subplot(151)
+    plt.xlabel("Cost")
+    plt.ylabel("Time (s)")
+    plt.scatter(algo0Cost, algo0Perf)
+    x = np.array(algo0Cost)
+    y = np.array((algo0Perf))
+    m, b = np.polyfit(x, y, 1) #generates a line of best fit
+    plt.plot(x, m * x + b) #plots the line of best fit
+    plt.subplot(152)
+    plt.scatter(algo1Cost, algo1Perf)
+    x = np.array(algo1Cost)
+    y = np.array((algo1Perf))
+    m, b = np.polyfit(x, y, 1)
+    plt.plot(x, m * x + b)
+    plt.subplot(153)
+    plt.scatter(algo2Cost, algo2Perf)
+    x = np.array(algo2Cost)
+    y = np.array((algo2Perf))
+    m, b = np.polyfit(x, y, 1)
+    plt.plot(x, m * x + b)
+    plt.subplot(154)
+    plt.scatter(algo3Cost, algo3Perf)
+    x = np.array(algo3Cost)
+    y = np.array((algo3Perf))
+    m, b = np.polyfit(x, y, 1)
+    plt.plot(x, m * x + b)
+    plt.subplot(155)
+    plt.scatter(algo4Cost, algo4Perf)
+    x = np.array(algo4Cost)
+    y = np.array((algo4Perf))
+    m, b = np.polyfit(x, y, 1)
+    plt.plot(x, m * x + b)
     plt.show()
     
 def main():
-    #evaluate(10)
-    
-    #showInitialMaze("problem.txt")
-    runProblem("problem.txt")
+    evaluate(50)
+    #runProblem("problem.txt")
     
 if __name__ == "__main__":
     main()

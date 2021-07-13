@@ -435,6 +435,23 @@ def algoFour(maze):
         visited[x][y] = True
     return -3
 
+# Shows the start and end points of the maze described in the problem file, does not execute an alogrithm
+def showInitialMaze(file):
+    f = open(file, "r")
+    lines = f.readlines()
+    size = int(lines[0])
+    start = lines[1].split()
+    start[0] = int(start[0])
+    start[1] = int(start[1])
+    goal = lines[2].split()
+    goal[0] = int(goal[0])
+    goal[1] = int(goal[1])
+
+    file = "maze_" + str(lines[4].strip()) + ".txt"
+    maze1 = maze(file, start, goal, size)
+    maze1.buildMaze()
+    maze1.visualize()
+
 # Executes the given path finding algoithm on a maze described in the problem file
 def runProblem(file):
     f = open(file, "r")
@@ -592,8 +609,10 @@ def evaluate(num):
     plt.show()
     
 def main():
-    evaluate(10)
-    #runProblem("problem.txt")
+    #evaluate(10)
+    
+    #showInitialMaze("problem.txt")
+    runProblem("problem.txt")
     
 if __name__ == "__main__":
     main()

@@ -436,6 +436,23 @@ def algoFour(maze):
         visited[x][y] = True
     return -3
 
+# Shows the start and end points of the maze described in the problem file, does not execute an alogrithm
+def showInitialMaze(file):
+    f = open(file, "r")
+    lines = f.readlines()
+    size = int(lines[0])
+    start = lines[1].split()
+    start[0] = int(start[0])
+    start[1] = int(start[1])
+    goal = lines[2].split()
+    goal[0] = int(goal[0])
+    goal[1] = int(goal[1])
+
+    file = "maze_" + str(lines[4].strip()) + ".txt"
+    maze1 = maze(file, start, goal, size)
+    maze1.buildMaze()
+    maze1.visualize()
+
 # Executes the given path finding algoithm on a maze described in the problem file
 def runProblem(file):
     f = open(file, "r")
@@ -578,7 +595,7 @@ def evaluate(num):
                 algo4Perf.append(data[1])
     plt.figure()
     #Cost vs performance
-    plt.subplot(151)
+    plt.suptitle("Cost vs Performance over 50 iterations (Algorithm 0)")
     plt.xlabel("Cost")
     plt.ylabel("Time (s)")
     plt.scatter(algo0Cost, algo0Perf)
@@ -586,30 +603,74 @@ def evaluate(num):
     y = np.array((algo0Perf))
     m, b = np.polyfit(x, y, 1) #generates a line of best fit
     plt.plot(x, m * x + b) #plots the line of best fit
-    plt.subplot(152)
+    plt.title("with m = " + str(m))
+    plt.show()
+
+    plt.suptitle("Cost vs Performance over 50 iterations (Algorithm 1)")
+    plt.xlabel("Cost")
+    plt.ylabel("Time (s)")
     plt.scatter(algo1Cost, algo1Perf)
     x = np.array(algo1Cost)
     y = np.array((algo1Perf))
     m, b = np.polyfit(x, y, 1)
     plt.plot(x, m * x + b)
-    plt.subplot(153)
+    plt.title("with m = " + str(m))
+    plt.show()
+
+    plt.suptitle("Cost vs Performance over 50 iterations (Algorithm 2)")
+    plt.xlabel("Cost")
+    plt.ylabel("Time (s)")
     plt.scatter(algo2Cost, algo2Perf)
     x = np.array(algo2Cost)
     y = np.array((algo2Perf))
     m, b = np.polyfit(x, y, 1)
     plt.plot(x, m * x + b)
-    plt.subplot(154)
+    plt.title("with m = " + str(m))
+    plt.show()
+
+    plt.suptitle("Cost vs Performance over 50 iterations (Algorithm 3)")
+    plt.xlabel("Cost")
+    plt.ylabel("Time (s)")
     plt.scatter(algo3Cost, algo3Perf)
     x = np.array(algo3Cost)
     y = np.array((algo3Perf))
     m, b = np.polyfit(x, y, 1)
     plt.plot(x, m * x + b)
-    plt.subplot(155)
+    plt.title("with m = " + str(m))
+    plt.show()
+
+    plt.suptitle("Cost vs Performance over 50 iterations (Algorithm 4)")
+    plt.xlabel("Cost")
+    plt.ylabel("Time (s)")
     plt.scatter(algo4Cost, algo4Perf)
     x = np.array(algo4Cost)
     y = np.array((algo4Perf))
     m, b = np.polyfit(x, y, 1)
     plt.plot(x, m * x + b)
+    plt.title("with m = " + str(m))
+    plt.show()
+
+    # Cost vs algorithm (IDDFS excluded)
+    plt.suptitle("Cost vs algorithms over 50 iterations, IDDFS excluded")
+    plt.title("red = Alg0, blue = Alg2, magenta = Alg3, black = Alg4")
+    plt.xlabel("Iteration")
+    plt.ylabel("Cost")
+    plt.plot(count, algo0Cost, 'r')
+    plt.plot(count, algo2Cost, 'b')
+    plt.plot(count, algo3Cost, 'm')
+    plt.plot(count, algo4Cost, 'k')
+    plt.show()
+
+    #Cost vs algorithm (IDDFS included)
+    plt.suptitle("Cost vs algorithms over 50 iterations, IDDFS included")
+    plt.title("red = Alg0, green = Alg1, blue = Alg2, magenta = Alg3, black = Alg4")
+    plt.xlabel("Iteration")
+    plt.ylabel("Cost")
+    plt.plot(count, algo0Cost, 'r')
+    plt.plot(count, algo1Cost, 'g')
+    plt.plot(count, algo2Cost, 'b')
+    plt.plot(count, algo3Cost, 'm')
+    plt.plot(count, algo4Cost, 'k')
     plt.show()
     
 def main():

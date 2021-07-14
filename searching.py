@@ -693,6 +693,54 @@ def evaluate(num):
     plt.plot(count, algo3Cost, 'm')
     plt.plot(count, algo4Cost, 'k')
     plt.show()
+
+    alg0 = [0]
+    alg1 = [1]
+    alg2 = [2]
+    alg3 = [3]
+    alg4 = [4]
+
+    alg0AvgCost = [sum(algo0Cost)/float(len(algo0Cost))]
+    alg1AvgCost = [sum(algo1Cost)/float(len(algo1Cost))]
+    alg2AvgCost = [sum(algo2Cost)/float(len(algo2Cost))]
+    alg3AvgCost = [sum(algo3Cost)/float(len(algo3Cost))]
+    alg4AvgCost = [sum(algo4Cost)/float(len(algo4Cost))]
+
+    alg0AvgPerf = [sum(algo0Perf)/float(len(algo0Perf))]
+    alg1AvgPerf = [sum(algo1Perf)/float(len(algo1Perf))]
+    alg2AvgPerf = [sum(algo2Perf)/float(len(algo2Perf))]
+    alg3AvgPerf = [sum(algo3Perf)/float(len(algo3Perf))]
+    alg4AvgPerf = [sum(algo4Perf)/float(len(algo4Perf))]
+
+    
+
+# Average Cost vs algorithm (IDDFS included)
+    plt.suptitle("Average Cost vs algorithms over 50 iterations")
+    plt.title("red = Alg0, blue = Alg2, magenta = Alg3, black = Alg4")
+    plt.xlabel("Algorithm Number")
+    plt.ylabel("Average Cost")
+    plt.scatter(alg0, alg0AvgCost, color = 'r')
+    plt.scatter(alg2, alg2AvgCost, color = 'b')
+    plt.scatter(alg3, alg3AvgCost, color = 'm')
+    plt.scatter(alg4, alg4AvgCost, color = 'k')
+    plt.show()
+
+    # Average Time vs algorithm (IDDFS included)
+    plt.suptitle("Average Time vs algorithms over 50 iterations")
+    plt.title("red = Alg0, blue = Alg2, magenta = Alg3, black = Alg4")
+    plt.xlabel("Algorithm Number")
+    plt.ylabel("Average Time")
+    plt.scatter(alg0, alg0AvgPerf, color = 'r')
+    plt.scatter(alg2, alg2AvgPerf, color = 'b')
+    plt.scatter(alg3, alg3AvgPerf, color = 'm')
+    plt.scatter(alg4, alg4AvgPerf, color = 'k')
+    plt.show()
+
+    print("Algorithm Zero: The average cost is " + str(sum(algo0Cost)/float(len(algo0Cost))) + " and the average time taken is " +  str(sum(algo0Perf)/float(len(algo0Perf))) + " seconds")
+    print("Algorithm One: The average cost is " + str(sum(algo1Cost)/float(len(algo1Cost))) + " and the average time taken is " +  str(sum(algo1Perf)/float(len(algo1Perf))) + " seconds")
+    print("Algorithm Two: The average cost is " + str(sum(algo2Cost)/float(len(algo2Cost))) + " and the average time taken is " +  str(sum(algo2Perf)/float(len(algo2Perf))) + " seconds")
+    print("Algorithm Three: The average cost is " + str(sum(algo3Cost)/float(len(algo3Cost))) + " and the average time taken is " +  str(sum(algo3Perf)/float(len(algo3Perf))) + " seconds")
+    print("Algorithm Four: The average cost is " + str(sum(algo4Cost)/float(len(algo4Cost))) + " and the average time taken is " +  str(sum(algo4Perf)/float(len(algo4Perf))) + " seconds")
     
 def main():
     evaluate(50)

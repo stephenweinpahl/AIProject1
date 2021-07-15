@@ -81,9 +81,14 @@ Comparing the searched area from IDDFS to UCS, it appears that IDDFS searches le
 \textit{3. Algorithm 2: A* with Manhattan distance $(h_1)$}
 \begin{itemize}
     \item Consistent: For our problem, A* Using Manhattan distance is considered consistent, as the first time we reach a new state, we are guaranteed to be on an optimal path. Thus, the function h(n) never becomes greater than the cost of the action from n to n’ plus the heuristic estimate.
-    \item Admissible: Since the heuristic takes into account each individual cell when calculating costs, it will never make an overestimation.
+    \item Admissible: Assume h1 is admissible. Let $n$ be a node such that the goal function $g(n)$ is valid but is part of a non optimal path. Let $n’$ be a node on the optimal path. Observing that the Manhattan distance is very similar to the triangle inequality which states that the sum of two sides of a triangle is always greater than or equal to the third side, it becomes clear that the Manhattan distance is actually the minimum cost of getting to the goal state. This is because the Manhattan distance will always be greater than or equal to the actual cost of getting to a goal state given the movement restrictions, the actual cost of getting the goal state will always be along the Manhattan distance due to the movement restrictions. In this problem the following equality will hold where c* is the cost of moving the non optimal node to the goal state:
+
+$f(n’) = g(n’) + h(n’) <= c* < f(n) = g(n) + h(n)$
+
+Thus, A* with h1 will always expand the n’ node with the lower cost function and will never overestimate and is therefore admissible
+
 \end{itemize}
-Running the A* algorithm with manhattan distance as the heuristic on the initial problem described in the setup above, the following path is found. It has a cost of 176 and took .0154 seconds to compute. The red cells are all the visited cells and the green shows the path from start state to the goal state.
+Running the A* algorithm with Manhattan distance as the heuristic on the initial problem described in the setup above, the following path is found. It has a cost of 176 and took .0154 seconds to compute. The red cells are all the visited cells and the green shows the path from start state to the goal state.
 
 \begin{figure}[ht]
     \centering
@@ -91,13 +96,13 @@ Running the A* algorithm with manhattan distance as the heuristic on the initial
     \caption{A* using Manhattan Distance on Initial Problem}
     \label{fig:h1}
 \end{figure}
-
+The A* algorithm with manhattan distance as the heuristic significantly reduces the searched part of maze as shown in Figure 4 compared the other previous algorithms. It has the fastest time to compute at only .0154 seconds and results in the same optimal cost as UCS. This algorithm would likely scale much better than UCS to more complex and larger mazes, as the search area from UCS scales very fast as the complexity of the problem increases. It seems that Manhattan distance is an excellent heuristic for solving maze problems.
 \newpage
 
-\textit{4. Algorithm 3: A* with Manhattan distance $(h_3)$}
+\textit{4. Algorithm 3: A* with Minimum of Euclidean and Manhattan $(h_3)$}
 \begin{itemize}
-    \item Consistent: This algorithm uses either the euclidean distance or Manhattan distance to a goal state, whichever one is smaller. We have already shown that Manhattan distance is consistent. Euclidean distance is also consistent for a reason similar to Manhattan.
-    \item Admissible: The Manhattan distance heuristic has already been shown to be admissible. Euclidean distance heuristic is also known to be admissible as it calculates a direct path to the goal, ignoring any barricades or even invalid paths and actions. As such, the cost to the path will never be overestimated.
+    \item Consistent: This algorithm uses either the euclidean distance or Manhattan distance to a goal state, whichever one is smaller due to the minimum function. Thus, as long as both the  Euclidean distance and Manhattan distance are consistent, this heuristic will also be consistent as it will always be less than or equal to two proven consistent heuristics.  We have already shown that Manhattan distance is consistent. Euclidean distance is also consistent by a very similar proof. Considering the fact that Euclidean distance is the shortest distance possible from two points assuming no obstructions, then it is clear that the Euclidean distance will always be less than or equal to the Manhattan distance (which can also be seen from the triangle inequality). Thus it is clear that the Euclidean distance is consistent, and thus the minimum of these two heuristics is also consistent.
+    \item Admissible: The Manhattan distance heuristic has already been shown to be admissible. Euclidean distance heuristic is also known to be admissible as it calculates a direct path to the goal, ignoring any barricades or even invalid paths and actions. As such, the cost of the current state to the goal will never be overestimated and thus this heuristic is consistent.
 \end{itemize}
 Running the A* algorithm with the minimum of the Manhattan and euclidean distance as the heuristic on the initial problem described in the setup above, the following path is found. It has a cost of 176 and took .0218 seconds to compute. The red cells are all the visited cells and the green shows the path from start state to the goal state.
 
@@ -107,13 +112,15 @@ Running the A* algorithm with the minimum of the Manhattan and euclidean distanc
     \caption{A* using Minimum of Euclidean and Manhattan Distance on Initial Problem}
     \label{fig:h3}
 \end{figure}
-
+The A* algorithm with the minimum of the Manhattan and Euclidean distance as the heuristic has a searched area in between that of UCS and Algorithm 2. While this may seem like it is slightly worse than using just the Manhattan distance, having a slightly larger search area could be beneficial if the maze has many dead ends and other obstacles as the algorithm could develop more paths to circumvent these obstructions. For this particular maze its time is slightly slower than algorithm 2 at .0218 seconds, however more iterations of all the algorithms will be compared in the next section.
+\newpage
 \textit{5. Algorithm 4: A* with custom heuristic}
 \begin{itemize}
-    \item Consistent: 
+    \item $h_6 = min{w*h1(n) (1-w), w*h2(n) (1-w)}, w = rand(0, 1), h_1 = Manhattan, h_2 = Euclidean$
+    \item Consistent: It is very easy to see that heuristic will always be less than or equal to the previously discussed $h_3$ due to the added probability which only scales the value between (0, 1). Thus because $h_3$ is consistent, so is this custom heuristic.
+
     \item Admissible: The heuristic takes the minimum of a randomly (between 0.0 and 1.0) scaled Manhattan and Euclidean distance heuristic. As such, the heuristic is only ever as big as either its Manhattan or Euclidean counterpart. With this being the case, the estimated costs will always be smaller than the actual costs. Thus, the custom heuristic is admissible.
-    \item Explanation:
-    \item Better than others?: As shown in the results, this heuristic actually performs about the same as other implemented heuristics. It neither performs worse or better than any of the others.
+    \item Better than others?: This question will be explored after examining the data found in the next section.
 \end{itemize}
 Running the A* algorithm with the custom heuristic on the initial problem described in the setup above, the following path is found. It has a cost of 176 and took .0335 seconds to compute. The red cells are all the visited cells and the green shows the path from start state to the goal state.
 
@@ -124,10 +131,12 @@ Running the A* algorithm with the custom heuristic on the initial problem descri
     \caption{A* using Custom Heuristic on Initial Problem}
     \label{fig:custom}
 \end{figure}
-
+The A* algorithm with the custom heuristic has a searched area that is larger than the previous A* implementations. Having a slightly larger search area that involves essentially searching over a wider probability distribution could be beneficial if the maze has many dead ends and other obstacles as the algorithm could develop more paths to circumvent these obstructions. For this particular maze its time is slightly slower than algorithm 2 at .0335 seconds, which is directly due to the increased cost of computing the heuristic and the expanded search area. More discussion on why the heuristic was chosen and how it compares will be done in the next section. 
 \newpage
 
 \section*{{Results}}
+\textit{In this section each algorithm was tested 50 times from maze000 to maze049. The start and goal points were randomized to valid initial positions and were kept consistent through each iteration. The time taken to complete each algorithm as well as the reported cost of a solution were both recorded over the run. A cost of zero is associated with a failed search. The goal of this section is to analyze the performance and behavior of each algorithm.}
+
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{CVPALG0.png}
@@ -141,27 +150,15 @@ Running the A* algorithm with the custom heuristic on the initial problem descri
     \caption{Cost vs Performance using Iterative Deepening Depth First Search}
     \label{fig:CostVsPerformanceAlg1}
 \end{figure}
+Comparing the first two algorithms shown in Figure 7 and 8, it becomes clear that IDDFS is significantly slower and overall worse performing than the UCS algorithm. Not only does it typically achieve much higher cost solutions, it takes orders of magnitude more time to compute these solutions. As a worse case when no solution is found, it could take up to 8 seconds to compute that there is no path where the highest time taken by UCS is only .025 seconds. This performance discrepancy is so big that there are almost no use cases where IDDFS would be recommended. While neither of these plots are particularly linear, a simple linear regression does give some interesting intuition on how these algorithms might scale given a more complex maze. The slope represents how the cost of a solution dictates the time found to a solution. Meaning that a maze with a very long path will generally take a longer time to solve than one with a smaller optimal path. As seen by the regression, the UCS has a much smaller slope than IDDFS, indicating that as maze complexity increases the gap between the time taken to find a solution will grow wider as well (assuming a suitable depth for IDDFS). It should be noted that given more data over larger maze sizes, a better fit could be adapted to show the accurate growth of these algorithms.
 \newpage
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{CVPALG2.png}
-    \caption{ Cost vs Performance over 50 iterations using A* with Manhattan Distance}
-    \label{fig:CostVsPerformanceAlg2}
+    \includegraphics[width=\textwidth]{AstarCompare.png}
+    \caption{ Cost vs Performance over 50 iterations using A* search, all heuristics plotted}
+    \label{fig:CostVsPerformanceAstar}
 \end{figure}
-\newpage
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{CVPALG3.png}
-    \caption{Cost vs Performance using A* with min(Manhattan,Euclidean)}
-    \label{fig:CostVsPerformanceAlg3}
-\end{figure}
-\newpage
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=\textwidth]{CVPALG4.png}
-    \caption{Cost vs Performance using A* with custom heuristic}
-    \label{fig:CostVsPerformanceAlg4}
-\end{figure}
+In figure 9, we compare the cost vs performance between each A* search implemented with different heuristics. From this, we see that the heuristics chosen had a significant impact on performance. Interestingly, algorithm three and four exhibit similar rates of growth, indicating that as the maze size gets very large the performance of these algorithms will likely approach the same value. From the data it is clear that algorithm four generally takes the most time to compute a solution and algorithm 2 takes the least amount of time to find a solution. Overall, UCS and algorithm 2 appear to be the best algorithms while IDDFS is clearly the worst performing.  
 \newpage
 \begin{figure}[ht]
     \centering
@@ -169,7 +166,7 @@ Running the A* algorithm with the custom heuristic on the initial problem descri
     \caption{Cost vs Algorithm, Iterative Deepening Depth First Search excluded}
     \label{fig:CostVsAlgs}
 \end{figure}
-For this graph, we intentionally excluded IDDFS. The reason for this is due to how much of an outlier data from IDDFS produces. In any case, from this graph, we see that despite using different heuristics, all of the A* search algorithms performed with the same cost. Additionally, using Uniform Cost Search, an uninformed search algorithm, also shared the same cost as A*. From this, we gather not only that UCS is as cost optimal compared to an informed search algorithm, but that it is also as consistent as well.
+For this graph, we intentionally excluded IDDFS. The reason for this is due to how much of an outlier data from IDDFS produces. In any case, from this graph, we see that despite using different heuristics, all of the A* search algorithms performed with the same cost. Additionally, using Uniform Cost Search, an uninformed search algorithm, also shared the same cost as A*. From this, we gather not only that UCS is as cost optimal compared to an informed search algorithm, but that it is also as consistent as well. From this graph it is clear that not only are all the algorithms optimal, they are also consistent amongst themselves.
 \newpage
 \begin{figure}[ht]
     \centering
@@ -177,6 +174,24 @@ For this graph, we intentionally excluded IDDFS. The reason for this is due to h
     \caption{Cost vs Algorithms, including Iterative Deepening Depth First Search}
     \label{fig:CostVsAlgsIDDFS}
 \end{figure}
-For completeness, we have included IDDFS this time. As shown, IDDFS far exceeds the cost used compared to other algorithms implemented. Compared to other algorithms, IDDFS takes far longer, and costs much more despite searching less cells.
+For completeness, we have included IDDFS this time. As shown, IDDFS far exceeds the cost used compared to other algorithms implemented. Compared to other algorithms, IDDFS takes far longer, and costs much more despite searching less cells. In addition the results where IDDFS has a value of zero is when it can not find a solution. The two figures shown below indicate the average performance of the algorithms over the 50 iterations (excluding IDDFS because of scaling issues).
+
+\newpage
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{avgcost.png}
+    \caption{Average Cost of Algorithms, excluding Iterative Deepening Depth First Search}
+    \label{fig:avgcost}
+\end{figure}
+\newpage
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{avgtime.png}
+    \caption{Average Time of Algorithms, excluding Iterative Deepening Depth First Search}
+    \label{fig:avgtime}
+\end{figure}
+As shown in Figure 12, the average cost of all the algorithms is extremely close at nearly all having the same average cost (the custom heuristic interestingly is slightly higher but overall it is a very marginable difference). Figure 13 gives some very interesting information regarding how the algorithms perform relative to each other. It appears that Algorithm 2 which uses the Manhattan distance as the heuristic is the best performing algorithm with UCS very close by. Algorithm 3 is then slightly worse performing, with the algorithm 4 and the custom heuristic performing the worst. Despite this, it is still very difficult to decide what heuristic is the ‘best’ due to the relatively small sample size and lack of scaling of maze size and complexity. To further test these algorithms larger mazes with more deadends between the start and goal state would likely show the advantages of heuristics that investigate more of the maze and may even result in these algorithms outperforming UCS and Algorithm 2.
+\par
+The decision to design the custom heuristic as h6 = min{w*h1(n) (1-w), w*h2(n) (1-w)}, w = rand(0, 1), h1 = Manhattan, h2 = Euclidian, was to allow for more of the maze to be searched. The thought process was that more stochasity would give the algorithm a better performance in solving really complicated mazes while still keeping the benefits of an informed search algorithm. While for very simple cases where the optimal path is very close to say the Euclidean path the custom heuristics will be outperformed as it searches more nodes, it may find a solution earlier given many obstructions and a large maze. Comparing the informed searches vs UCS would display an interesting result as the size of the maze gets very large and the optimal path becomes long. Because UCS is uninformed, it will grow its frontier out in a circular-like pattern, searching nodes which could be getting further away from the actual goal point without knowing. Thus UCS will take very long to find paths that start in the center of a large maze compared to the informed searches. Overall the performance of the custom heuristic is still unclear, but in general on small mazes that don’t have many obstruction A* with manhattan distance will likely be the best algorithm, but as the complexity and size of the maze increase more research would need to be done to determine which algorithm to select. A major outcome is to avoid using IDDFS due it being non optimal and a very slow algorithm compared to all the other tested algorithms.
 
 \end{document}
